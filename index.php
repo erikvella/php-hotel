@@ -40,6 +40,26 @@
 
     ];
 
+    $filteredhotels = [];
+// il voto è 0 se non viene inviato alcun parametro in post
+    $vote = isset($_POST['vote']) ? $_POST['vote'] : 0;
+// se è stato checkato parking filtro con un foreach in base alla proprietà parking TRUE / FALSE , se parking è TRUE lo pusho nell'array che dovrò ciclare , and && anche in base al voto 
+    if(isset($_POST['parking'])){
+      foreach($hotels as $hotel){
+        if($hotel['parking'] && $hotel['vote'] >= $vote){
+          $filteredhotels[] = $hotel;
+        }
+      }
+    }else{
+      foreach($hotels as $hotel){
+        if($hotel['vote'] >= $vote){
+          $filteredhotels[] = $hotel;
+        }
+      }
+      
+      
+    }
+
 ?>
 
 
@@ -60,42 +80,71 @@
 
   <div class="container my-5">
     <div class="row">
+<div class="col-auto">
+<form action="index.php" method="POST">
+      <input type="checkbox" class="form-check-input" name="parking" id="parking">
+      <label for="parking" class="form-check-label">
+        Solo hotel con parcheggio
+      </label>
+</div>
+
+<div class="col-auto">
+<h3>Filtra gli hotel in base al voto minimo</h3>
+    <form action="index.php" method="POST">
+     
+
+      <input type="radio" class="form-check-input" name="vote" value="1" id="vote1">
+      <label for="vote1" class="form-check-label me-3 ">
+        1
+      </label>
+      <input type="radio" class="form-check-input" name="vote" value="2" id="vote2">
+      <label for="vote2" class="form-check-label me-3 ">
+        2
+      </label>
+      <input type="radio" class="form-check-input" name="vote" value="3" id="vote3">
+      <label for="vote3" class="form-check-label me-3 ">
+        3
+      </label>
+      <input type="radio" class="form-check-input" name="vote" value="4" id="vote4">
+      <label for="vote4" class="form-check-label me-3 ">
+        4
+      </label>
+      <input type="radio" class="form-check-input" name="vote" value="5" id="vote5">
+      <label for="vote5" class="form-check-label me-3 ">
+        5
+      </label>
+
+      
+      <button class="btn btn-success">Cerca</button>
+    </form>
+
+</div>
+     
+
+
       <div class="col-12">
       <table class="table">
   <thead>
     <tr>
-      <th scope="col">Nome Hotel</th>
-      <?php foreach($hotels as $hotel): ?>
-      <th scope="col"> <?php echo $hotel['name'] ?></th>
-      <?php endforeach; ?>
+     <th scope="col">Nome</th>
+     <th scope="col">Descrizione</th>
+     <th scope="col">Parcheggio</th>
+     <th scope="col">Voto</th>
+     <th scope="col">Distanza dal centro</th>
+     
       
     </tr>
   </thead>
   <tbody>
+    <?php foreach($filteredhotels as $hotel): ?>
     <tr>
-      <th scope="row">Descrizione</th>
-      <?php foreach($hotels as $hotel): ?>
-      <td scope="col"> <?php echo $hotel['description'] ?></td>
-      <?php endforeach; ?>
+      <td><?php echo $hotel['name'] ?></td>
+      <td><?php echo $hotel['description'] ?></td>
+      <td><?php echo $hotel['parking'] ? 'Si' : 'No' ?></td>
+      <td><?php echo $hotel['vote'] ?></td>
+      <td><?php echo $hotel['distance_to_center'] ?> Km</td>
     </tr>
-    <tr>
-      <th scope="row">Parcheggio</th>
-      <?php foreach($hotels as $hotel): ?>
-      <td scope="col"> <?php echo $hotel['parking'] ?></td>
-      <?php endforeach; ?>
-    </tr>
-    <tr>
-      <th scope="row">Valutazione</th>
-      <?php foreach($hotels as $hotel): ?>
-      <td scope="col"> <?php echo $hotel['vote'] ?> su 5</td>
-      <?php endforeach; ?>
-    </tr>
-    <th scope="row">Distanza dal centro</th>
-      <?php foreach($hotels as $hotel): ?>
-      <td scope="col"> <?php echo $hotel['distance_to_center'] ?> Km</td>
-      <?php endforeach; ?>
-    </tr>
-    
+    <?php endforeach; ?>
   </tbody>
 </table>
 
